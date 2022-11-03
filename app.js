@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const members = require('./Members');
 const logger = require('./middleware/logger');
 
 const app = express();
@@ -8,20 +7,19 @@ const app = express();
 
 
 
-// Init middleware
-app.use(logger);
+//  middleware
+app.use(express.json());
+app.use(express.urlencoded({extended: false }));
 
-// Gets All Members 
-app.get('/api/members', (req,res) => {
-    res.json(members);
-})
+
+app.use('api/members', require('./routes/api/members'));
+
 
 //Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.get('/', (req,res) => {
-//    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+// Members api routes
+app.use('/api/members', require('./routes/api/members'));
 
 const PORT = process.env.PORT || 3000;
 
